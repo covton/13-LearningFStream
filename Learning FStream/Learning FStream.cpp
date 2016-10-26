@@ -2,10 +2,16 @@
 //
 
 #include "stdafx.h"
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 int main()
 {
-    return 0;
+    
+	
+	
+	
+	return 0;
 }
 
