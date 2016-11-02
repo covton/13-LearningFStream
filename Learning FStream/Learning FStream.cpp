@@ -18,19 +18,52 @@ std::string ReadFileIntoString(std::string filename)
 	ReadFile.open(filename);
 
 	//define a string to hold the final and each temporary output
-	std::string strResult;
 	std::string strTemp;
+	std::string strResult;
 
 	while (!ReadFile.eof())
 	{
-		std::getline(ReadFile, strTemp);
-		if (strResult.empty())
+		//read each line into a temporary string
+		while (std::getline(ReadFile, strTemp))
 		{
-			strResult = strTemp;
-		}
-		else
-		{
-			strResult = strResult + "\n" + strTemp;
+			while (strTemp.length() > 0)
+			{
+				//now break on commas and store index, then push into strResult
+				int index = strTemp.find_first_of(',');
+
+				if (strResult.empty())
+				{
+					//find_first_of return std::string::npos if it doesn't find anything
+					if (index == std::string::npos)
+					{
+						strResult = strTemp;
+					}
+					else
+					{
+						strResult = strTemp.substr(0, index);
+					}
+				}
+				else
+				{
+					if (index == std::string::npos)
+					{
+						strResult = strResult + "\n" + strTemp;
+					}
+					else
+					{
+						strResult = strResult + "\n" + strTemp.substr(0, index);
+					}
+				}
+				//remove the start of strTemp and loop
+				if (index == std::string::npos)
+				{
+					strTemp = "";
+				}
+				else
+				{
+					strTemp = strTemp.substr(index + 2);
+				}
+			}
 		}
 	}
 	ReadFile.close();
