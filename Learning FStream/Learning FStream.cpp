@@ -5,11 +5,12 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 //global const of file name
 const std::string myfile = "Input.txt";
 
-std::string ReadFileIntoString(std::string filename)
+std::vector<std::string> ReadFileIntoVector(std::string filename)
 {
 	//define an input file stream called ReadFile
 	std::fstream ReadFile;
@@ -17,9 +18,9 @@ std::string ReadFileIntoString(std::string filename)
 	//open the file into the stream
 	ReadFile.open(filename);
 
-	//define a string to hold the final and each temporary output
+	//define a vector to hold each result 
 	std::string strTemp;
-	std::string strResult;
+	std::vector<std::string> vecResult;
 
 	while (!ReadFile.eof())
 	{
@@ -28,32 +29,19 @@ std::string ReadFileIntoString(std::string filename)
 		{
 			while (strTemp.length() > 0)
 			{
-				//now break on commas and store index, then push into strResult
+				//now break on commas and store index, then push into vecResult
 				int index = strTemp.find_first_of(',');
 
-				if (strResult.empty())
-				{
-					//find_first_of return std::string::npos if it doesn't find anything
+					//find_first_of returns std::string::npos if it doesn't find anything
 					if (index == std::string::npos)
 					{
-						strResult = strTemp;
+						vecResult.push_back(strTemp);
 					}
 					else
 					{
-						strResult = strTemp.substr(0, index);
+						vecResult.push_back(strTemp.substr(0, index));
 					}
-				}
-				else
-				{
-					if (index == std::string::npos)
-					{
-						strResult = strResult + "\n" + strTemp;
-					}
-					else
-					{
-						strResult = strResult + "\n" + strTemp.substr(0, index);
-					}
-				}
+
 				//remove the start of strTemp and loop
 				if (index == std::string::npos)
 				{
@@ -67,18 +55,21 @@ std::string ReadFileIntoString(std::string filename)
 		}
 	}
 	ReadFile.close();
-
-	return strResult;
+	return vecResult;
 }
 
 
 
 int main()
 {
-	std::string strFile;
-
-	strFile = ReadFileIntoString(myfile);
-	std::cout << strFile << "\n";
+	std::vector<std::string> vecFile;
+	vecFile = ReadFileIntoVector(myfile);
+	
+	//loop through vector and print
+	for (unsigned int i = 0; i < vecFile.size(); i++)
+	{
+		std::cout << vecFile.at(i) << "\n";
+	}
 
 	system("PAUSE");
 	
